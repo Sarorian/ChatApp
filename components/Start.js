@@ -7,8 +7,9 @@ import {
   ImageBackground,
   TouchableOpacity,
   Dimensions,
+  Alert,
 } from "react-native";
-
+import { getAuth, signInAnonymously } from "firebase/auth";
 const image = require("../assets/BackgroundImage.png");
 
 const colorOptions = [
@@ -20,8 +21,23 @@ const colorOptions = [
 ];
 
 const Start = ({ navigation }) => {
+  const auth = getAuth();
+  const signInUser = () => {
+    signInAnonymously(auth)
+      .then((result) => {
+        navigation.navigate("Chat", {
+          userID: result.user.uid,
+          name,
+          backgroundColor,
+        });
+        Alert.alert("Signed in Successfully!");
+      })
+      .catch((error) => {
+        Alert.alert("Unable to sign in, try later again.");
+      });
+  };
   const [name, setName] = useState("");
-  const [backgroundColor, setBackgroundColor] = useState("#ffffff"); // Default to white
+  const [backgroundColor, setBackgroundColor] = useState("#ffffff");
 
   const { width, height } = Dimensions.get("window");
 
@@ -53,12 +69,7 @@ const Start = ({ navigation }) => {
               onPress={() => handleColorSelect(color)}
             />
           ))}
-          <TouchableOpacity
-            style={styles.startButton}
-            onPress={() =>
-              navigation.navigate("Chat", { name, backgroundColor })
-            }
-          >
+          <TouchableOpacity style={styles.startButton} onPress={signInUser}>
             <Text style={styles.startButtonText}>Go to Chat Room</Text>
           </TouchableOpacity>
         </View>
