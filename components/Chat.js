@@ -6,9 +6,10 @@ import {
   addDoc,
   onSnapshot,
   query,
+  orderBy,
   where,
 } from "firebase/firestore";
-const Chat = ({ db, route }) => {
+const Chat = ({ db, route, navigation }) => {
   const { name, backgroundColor, userID } = route.params;
   const [messages, setMessages] = useState([]);
 
