@@ -62,13 +62,21 @@ const Start = ({ navigation }) => {
             onChangeText={setName}
             placeholder="Type your username here"
           />
-          {colorOptions.map((color, index) => (
-            <TouchableOpacity
-              key={index}
-              style={[styles.colorOption, { backgroundColor: color }]}
-              onPress={() => handleColorSelect(color)}
-            />
-          ))}
+          <View style={styles.colorOptionsContainer}>
+            {colorOptions.map((color, index) => (
+              <TouchableOpacity
+                key={index}
+                style={[
+                  styles.colorOption,
+                  { backgroundColor: color },
+                  backgroundColor === color
+                    ? { borderWidth: 2, borderColor: "#ffffff" }
+                    : null,
+                ]}
+                onPress={() => handleColorSelect(color)}
+              />
+            ))}
+          </View>
           <TouchableOpacity style={styles.startButton} onPress={signInUser}>
             <Text style={styles.startButtonText}>Go to Chat Room</Text>
           </TouchableOpacity>
@@ -103,6 +111,10 @@ const styles = StyleSheet.create({
     height: 50,
     borderRadius: 25, // Half the width to make it round
     margin: 5,
+  },
+  colorOptionsContainer: {
+    flexDirection: "row", // Arrange color options horizontally
+    marginTop: 10,
   },
   startButton: {
     backgroundColor: "#3498db", // Default button color
