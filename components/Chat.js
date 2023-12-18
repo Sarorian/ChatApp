@@ -1,5 +1,11 @@
 import { useState, useEffect } from "react";
-import { StyleSheet, KeyboardAvoidingView, Platform, View } from "react-native";
+import {
+  StyleSheet,
+  KeyboardAvoidingView,
+  Platform,
+  View,
+  AsyncStorage,
+} from "react-native";
 import { Bubble, GiftedChat, InputToolbar } from "react-native-gifted-chat";
 import {
   collection,
@@ -9,7 +15,9 @@ import {
   orderBy,
   where,
 } from "firebase/firestore";
-const Chat = ({ db, route, navigation, isConnected }) => {
+import CustomActions from "./CustomActions";
+import MapView from "react-native-maps";
+const Chat = ({ db, route, navigation, isConnected, storage }) => {
   const { name, backgroundColor, userID } = route.params;
   const [messages, setMessages] = useState([]);
 
@@ -36,6 +44,24 @@ const Chat = ({ db, route, navigation, isConnected }) => {
   const renderInputToolbar = (props) => {
     if (isConnected) return <InputToolbar {...props} />;
     else return null;
+  };
+
+  const renderCustomView = (props) => {
+    const { currentMessage } = props;
+    if (currentMessage.location) {
+      return (
+        <MapView
+          style={{ width: 150, height: 100, borderRadius: 13, margin: 3 }}
+          region={{
+            latitude: currentMessage.location.latitude,
+            longitude: currentMessage.location.longitude,
+            latitudeDelta: 0.0922,
+            longitudeDelta: 0.0421,
+          }}
+        />
+      );
+    }
+    return null;
   };
 
   const renderBubble = (props) => {
@@ -81,6 +107,10 @@ const Chat = ({ db, route, navigation, isConnected }) => {
     };
   }, [isConnected]);
 
+  const renderCustomActions = (props) => {
+    return <CustomActions storage={storage} {...props} />;
+  };
+
   return (
     <View style={[styles.container, { backgroundColor }]}>
       <GiftedChat
@@ -88,6 +118,8 @@ const Chat = ({ db, route, navigation, isConnected }) => {
         messages={messages}
         renderBubble={renderBubble}
         onSend={(messages) => onSend(messages)}
+        renderActions={renderCustomActions}
+        renderCustomView={renderCustomView}
         user={{
           _id: userID,
           name: name,
