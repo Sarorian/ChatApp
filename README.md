@@ -1,11 +1,11 @@
 ﻿# ChatApp
 
-ChatApp is application that allows users to send messages, images, and geolocation data in a chat room in real time.
+ChatApp is an application that allows users to send messages, images, and geolocation data in a chat room in real-time.
 
 ## Features
 
 - Ability to pick a username and background color
-- Send images from the devices library
+- Send images from the device library
 - View images in the app
 - Take images and send them to other users
 - Send location data
